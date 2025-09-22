@@ -6,6 +6,7 @@
   --color-blanco-brillante: #ffffff;
   --color-rosa-neon: #ff69b4;
   --color-azul-oscuro: #1a2a3a;
+  --color-gris-claro-formulario: #555555;
 }
 
 body, html {
@@ -92,18 +93,25 @@ body, html {
   margin-top: auto;
 }
 
-/* Estilos específicos para componentes */
-.card-img-custom {
-  height: 200px;
-  object-fit: cover;
-}
-
+/* Estilos para las tarjetas de videojuegos */
 .card {
-  transition: transform 0.2s ease-in-out;
+  transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out, background-color 0.4s ease-in-out;
+  border: 1px solid var(--color-gris-intermedio);
+  background-color: var(--color-fondo-oscuro);
 }
 
 .card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(255, 105, 180, 0.3);
+  background-color: var(--color-azul-oscuro);
+}
+
+/* Estilo para las imágenes de las tarjetas */
+.card-img-custom {
+  height: 200px;
+  object-fit: cover;
+  border-top-left-radius: calc(0.25rem - 1px);
+  border-top-right-radius: calc(0.25rem - 1px);
 }
 
 /* Estilo del título principal */
@@ -119,4 +127,50 @@ body, html {
                0 0 30px var(--color-rosa-neon),
                0 0 40px var(--color-rosa-neon);
   transform: scale(1.05);
+}
+
+/* Estilos para el formulario */
+.form-label {
+  color: var(--color-blanco-brillante);
+}
+
+.form-control {
+  background-color: var(--color-gris-claro-formulario);
+  border: none;
+  color: var(--color-blanco-brillante);
+}
+
+.form-control:focus {
+  background-color: var(--color-gris-claro-formulario);
+  color: var(--color-blanco-brillante);
+  box-shadow: 0 0 0 0.25rem rgba(255, 105, 180, 0.5);
+}
+
+.btn-primary {
+  background-color: var(--color-rosa-neon);
+  border-color: var(--color-rosa-neon);
+  color: var(--color-blanco-brillante);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-rosa-neon);
+  border-color: var(--color-rosa-neon);
+}
+
+/* Estilos para el slider de sugerencias */
+.slider-container-sugerencias {
+  overflow: hidden;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.slider-wrapper-sugerencias {
+  display: flex;
+  transition: transform 1s ease-in-out;
+}
+
+.slider-item-sugerencias {
+  min-width: 33.3333%;
+  padding: 0 10px;
+  box-sizing: border-box;
 }

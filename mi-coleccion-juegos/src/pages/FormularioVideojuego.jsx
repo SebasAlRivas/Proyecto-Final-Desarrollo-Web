@@ -1,201 +1,190 @@
-import { useState, useEffect } from 'react';
-import { Container, Form, Button, ListGroup } from 'react-bootstrap';
+import React, { useState, useEffect, useRef } from 'react';
+import { Form, Button, Container, Row, Col, Card, Spinner } from 'react-bootstrap';
 import { db } from '../api/firebase';
 import { collection, addDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
-const RAWG_API_KEY = process.env.REACT_APP_RAWG_API_KEY;
-
 function FormularioVideojuego() {
-    const { id } = useParams();
-    const [nombre, setNombre] = useState('');
-    const [plataforma, setPlataforma] = useState('');
-    const [genero, setGenero] = useState('');
-    const [año, setAño] = useState('');
-    const [imagen, setImagen] = useState('');
-    const [valoracion, setValoracion] = useState(''); // Nuevo estado para la valoración
-    const [estrellas, setEstrellas] = useState(0); // Nuevo estado para las estrellas
-    const [resultadosBusqueda, setResultadosBusqueda] = useState([]);
-    const [cargandoBusqueda, setCargandoBusqueda] = useState(false);
-    const navigate = useNavigate();
-    const [esEditando, setEsEditando] = useState(false);
+  const [nombre, setNombre] = useState('');
+  const [plataforma, setPlataforma] = useState('');
+  const [genero, setGenero] = useState('');
+  const [año, setAño] = useState('');
+  const [imagen, setImagen] = useState('');
+  const [valoracion, setValoracion] = useState('');
+  const [estrellas, setEstrellas] = useState(0);
+  const [loadingSearch, setLoadingSearch] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        if (id) {
-            setEsEditando(true);
-            const obtenerVideojuego = async () => {
-                const docRef = doc(db, 'videojuegos', id);
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    const datos = docSnap.data();
-                    setNombre(datos.nombre || '');
-                    setPlataforma(datos.plataforma || '');
-                    setGenero(datos.genero || '');
-                    setAño(datos.año || '');
-                    setImagen(datos.imagen || '');
-                    setValoracion(datos.valoracion || '');
-                    setEstrellas(datos.estrellas || 0);
-                } else {
-                    console.log("No existe el documento");
-                }
-            };
-            obtenerVideojuego();
+  const esEdicion = !!id;
+  const timeoutRef = useRef(null);
+
+  useEffect(() => {
+    const obtenerVideojuego = async () => {
+      if (esEdicion) {
+        const docRef = doc(db, 'videojuegos', id);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setNombre(data.nombre || '');
+          setPlataforma(data.plataforma || '');
+          setGenero(data.genero || '');
+          setAño(data.año || '');
+          setImagen(data.imagen || '');
+          setValoracion(data.valoracion || '');
+          setEstrellas(data.estrellas || 0);
         }
-    }, [id]);
+      }
+    };
+    obtenerVideojuego();
+  }, [id, esEdicion]);
 
-    const buscarJuego = async (query) => {
-        if (query.length < 3) {
-            setResultadosBusqueda([]);
-            return;
-        }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const datos = { nombre, plataforma, genero, año, imagen, valoracion, estrellas: Number(estrellas) };
 
-        setCargandoBusqueda(true);
+    try {
+      if (esEdicion) {
+        const docRef = doc(db, 'videojuegos', id);
+        await updateDoc(docRef, datos);
+      } else {
+        await addDoc(collection(db, 'videojuegos'), datos);
+      }
+      navigate('/');
+    } catch (error) {
+      console.error("Error al guardar el documento: ", error);
+    }
+  };
+
+  const handleNombreChange = (e) => {
+    const value = e.target.value;
+    setNombre(value);
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    if (value.length > 2) {
+      setLoadingSearch(true);
+      timeoutRef.current = setTimeout(async () => {
         try {
-            const response = await axios.get(`https://api.rawg.io/api/games?key=${RAWG_API_KEY}&search=${query}`);
-            setResultadosBusqueda(response.data.results);
+          const response = await axios.get(`https://api.rawg.io/api/games?key=${process.env.REACT_APP_RAWG_API_KEY}&search=${value}`);
+          setSearchResults(response.data.results);
         } catch (error) {
-            console.error("Error al buscar el juego: ", error);
-            setResultadosBusqueda([]);
+          console.error("Error al buscar juegos: ", error);
+          setSearchResults([]);
         } finally {
-            setCargandoBusqueda(false);
+          setLoadingSearch(false);
         }
-    };
+      }, 500);
+    } else {
+      setSearchResults([]);
+      setLoadingSearch(false);
+    }
+  };
 
-    const seleccionarJuego = (juego) => {
-        setNombre(juego.name);
-        setPlataforma(juego.platforms ? juego.platforms.map(p => p.platform.name).join(', ') : 'N/A');
-        setGenero(juego.genres ? juego.genres.map(g => g.name).join(', ') : 'N/A');
-        setAño(juego.released ? juego.released.split('-')[0] : 'N/A');
-        setImagen(juego.background_image);
-        setResultadosBusqueda([]);
-    };
+  const fillForm = (game) => {
+    setNombre(game.name || '');
+    setPlataforma(game.platforms?.map(p => p.platform.name).join(', ') || '');
+    setGenero(game.genres?.map(g => g.name).join(', ') || '');
+    setAño(game.released?.split('-')[0] || '');
+    setImagen(game.background_image || '');
+    setSearchResults([]);
+  };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const datos = {
-                nombre,
-                plataforma,
-                genero,
-                año,
-                imagen,
-                valoracion, // Incluye la nueva valoración
-                estrellas, // Incluye las nuevas estrellas
-            };
+  const renderEstrellas = () => {
+    const estrellasArray = [];
+    for (let i = 1; i <= 5; i++) {
+      estrellasArray.push(
+        <span
+          key={i}
+          className="star"
+          onClick={() => setEstrellas(i)}
+          style={{ cursor: 'pointer', color: i <= estrellas ? 'gold' : 'gray', fontSize: '24px' }}
+        >
+          ★
+        </span>
+      );
+    }
+    return estrellasArray;
+  };
 
-            if (esEditando) {
-                const docRef = doc(db, 'videojuegos', id);
-                await updateDoc(docRef, datos);
-                console.log("Documento actualizado con ID: ", id);
-            } else {
-                const docRef = await addDoc(collection(db, 'videojuegos'), datos);
-                console.log("Documento escrito con ID: ", docRef.id);
-            }
-            navigate('/');
-        } catch (e) {
-            console.error("Error al procesar el documento: ", e);
-        }
-    };
-    
-    // Función para manejar el clic en una estrella
-    const handleEstrellasClick = (numEstrellas) => {
-        setEstrellas(numEstrellas);
-    };
+  return (
+    <Container className="my-5">
+      <h1 className="text-center mb-4 titulo-principal-neon" style={{ color: 'var(--color-rosa-neon)' }}>
+        {esEdicion ? 'Editar Videojuego' : 'Añadir Nuevo Videojuego'}
+      </h1>
+      <Row className="justify-content-md-center">
+        <Col md={8}>
+          <Form onSubmit={handleSubmit} className="p-4 rounded" style={{ backgroundColor: 'var(--color-fondo-oscuro)' }}>
+            
+            <Form.Group className="mb-3" controlId="formNombre">
+              <Form.Label>Nombre del Videojuego</Form.Label>
+              <Form.Control 
+                type="text" 
+                value={nombre} 
+                onChange={handleNombreChange} 
+                required 
+                placeholder="Ej: The Last of Us"
+              />
+              {loadingSearch && <Spinner animation="border" size="sm" className="mt-2" />}
+            </Form.Group>
 
-    return (
-        <Container className="my-5">
-            <h1 className="text-center" style={{ color: 'var(--color-rosa-neon)' }}>
-                {esEditando ? "Editar Videojuego" : "Añadir Nuevo Videojuego"}
-            </h1>
-            <Form onSubmit={handleSubmit}>
-                <Form.Group className="mb-3" controlId="formNombre">
-                    <Form.Label>Nombre del Videojuego</Form.Label>
-                    <Form.Control 
-                        type="text" 
-                        placeholder="Ingresa el nombre del videojuego" 
-                        value={nombre}
-                        onChange={(e) => {
-                            setNombre(e.target.value);
-                            buscarJuego(e.target.value);
-                        }}
-                    />
-                    {cargandoBusqueda ? (
-                        <p>Buscando...</p>
-                    ) : (
-                        <ListGroup className="mt-2" style={{ maxHeight: '200px', overflowY: 'auto' }}>
-                            {resultadosBusqueda.map(juego => (
-                                <ListGroup.Item 
-                                    key={juego.id} 
-                                    action 
-                                    onClick={() => seleccionarJuego(juego)}
-                                    style={{ backgroundColor: 'var(--color-fondo-oscuro)', color: 'var(--color-blanco-brillante)', borderColor: 'var(--color-gris-intermedio)' }}
-                                >
-                                    {juego.name}
-                                </ListGroup.Item>
-                            ))}
-                        </ListGroup>
-                    )}
-                </Form.Group>
-
-                <Form.Group className="mb-3" controlId="formPlataforma">
-                    <Form.Label>Plataforma</Form.Label>
-                    <Form.Control type="text" value={plataforma} onChange={(e) => setPlataforma(e.target.value)} />
-                </Form.Group>
-
-                <Form.Group className="mb-3" controlId="formGenero">
-                    <Form.Label>Género</Form.Label>
-                    <Form.Control type="text" value={genero} onChange={(e) => setGenero(e.target.value)} />
-                </Form.Group>
-
-                <Form.Group className="mb-3" controlId="formAño">
-                    <Form.Label>Año de Lanzamiento</Form.Label>
-                    <Form.Control type="text" value={año} onChange={(e) => setAño(e.target.value)} />
-                </Form.Group>
-
-                <Form.Group className="mb-3" controlId="formImagen">
-                    <Form.Label>URL de Imagen</Form.Label>
-                    <Form.Control type="text" value={imagen} onChange={(e) => setImagen(e.target.value)} />
-                </Form.Group>
-                
-                {/* Nuevo campo de valoración */}
-                <Form.Group className="mb-3" controlId="formValoracion">
-                    <Form.Label>Mi Valoración</Form.Label>
-                    <Form.Control 
-                        as="textarea" 
-                        rows={3} 
-                        placeholder="Escribe tu opinión sobre el juego"
-                        value={valoracion}
-                        onChange={(e) => setValoracion(e.target.value)}
-                    />
-                </Form.Group>
-
-                {/* Nuevo componente de estrellas (aún no existe) */}
-                <Form.Group className="mb-3">
-                    <Form.Label>Calificación</Form.Label>
-                    <div>
-                        {[...Array(5)].map((_, i) => (
-                            <span
-                                key={i}
-                                onClick={() => handleEstrellasClick(i + 1)}
-                                style={{
-                                    cursor: 'pointer',
-                                    fontSize: '2rem',
-                                    color: i < estrellas ? 'gold' : 'gray'
-                                }}
-                            >
-                                ★
-                            </span>
-                        ))}
-                    </div>
-                </Form.Group>
-
-                <Button variant="primary" type="submit">
-                    {esEditando ? "Actualizar" : "Guardar"}
-                </Button>
-            </Form>
-        </Container>
-    );
+            {searchResults.length > 0 && (
+              <div className="my-4">
+                <h5 style={{ color: 'var(--color-blanco-brillante)' }}>Resultados de la búsqueda:</h5>
+                <Row>
+                  {searchResults.slice(0, 3).map(game => (
+                    <Col key={game.id} xs={12} md={4} className="mb-3">
+                      <Card className="h-100" bg="dark" text="white">
+                        <Card.Img variant="top" src={game.background_image} />
+                        <Card.Body>
+                          <Card.Title>{game.name}</Card.Title>
+                          <Button variant="primary" onClick={() => fillForm(game)} className="mt-2">
+                            Seleccionar
+                          </Button>
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                  ))}
+                </Row>
+              </div>
+            )}
+            
+            <Form.Group className="mb-3" controlId="formPlataforma">
+              <Form.Label>Plataforma</Form.Label>
+              <Form.Control type="text" value={plataforma} onChange={(e) => setPlataforma(e.target.value)} required />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formGenero">
+              <Form.Label>Género</Form.Label>
+              <Form.Control type="text" value={genero} onChange={(e) => setGenero(e.target.value)} required />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formAño">
+              <Form.Label>Año de Lanzamiento</Form.Label>
+              <Form.Control type="number" value={año} onChange={(e) => setAño(e.target.value)} required />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formImagen">
+              <Form.Label>URL de la Imagen</Form.Label>
+              <Form.Control type="url" value={imagen} onChange={(e) => setImagen(e.target.value)} required />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formValoracion">
+              <Form.Label>Mi Valoración</Form.Label>
+              <Form.Control type="text" value={valoracion} onChange={(e) => setValoracion(e.target.value)} />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formEstrellas">
+              <Form.Label>Calificación (Estrellas)</Form.Label>
+              <div>{renderEstrellas()}</div>
+            </Form.Group>
+            <Button variant="primary" type="submit" className="w-100">
+              {esEdicion ? 'Guardar Cambios' : 'Añadir Videojuego'}
+            </Button>
+          </Form>
+        </Col>
+      </Row>
+    </Container>
+  );
 }
 
 export default FormularioVideojuego;
