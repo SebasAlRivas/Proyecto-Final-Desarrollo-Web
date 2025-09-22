@@ -1,0 +1,8 @@
+.sugerenciaCard {
+  border-left: 5px solid var(--color-rosa-neon);
+  transition: transform 0.2s ease-in-out;
+}
+
+.sugerenciaCard:hover {
+  transform: translateY(-5px);
+}

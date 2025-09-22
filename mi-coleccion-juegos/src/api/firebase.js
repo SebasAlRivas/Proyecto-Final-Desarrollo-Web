@@ -4,7 +4,7 @@ import { getFirestore } from "firebase/firestore";
 
 // Tu configuración de Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyAEWbm6ujCTofRLPVAe0PEIZ676ZxiwYVg",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: "mi-coleccion-juegos.firebaseapp.com",
   projectId: "mi-coleccion-juegos",
   storageBucket: "mi-coleccion-juegos.firebasestorage.app",

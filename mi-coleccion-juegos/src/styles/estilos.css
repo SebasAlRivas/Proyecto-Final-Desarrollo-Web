@@ -1,0 +1,22 @@
+.contenedor-principal {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+.fila-cards {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.columna-card {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.tarjeta-juego {
+  background-color: var(--color-gris-intermedio);
+  color: var(--color-blanco-brillante);
+  padding: 1rem;
+  border-radius: 0.25rem;
+}

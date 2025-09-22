@@ -21,3 +21,10 @@ a {
   text-decoration: none;
   color: inherit;
 }
+body {
+  background-color: var(--color-fondo-principal);
+  color: var(--color-blanco-brillante);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
