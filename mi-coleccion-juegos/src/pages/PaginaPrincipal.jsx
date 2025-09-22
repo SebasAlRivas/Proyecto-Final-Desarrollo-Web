@@ -54,7 +54,8 @@ function PaginaPrincipal() {
         <Row>
           {videojuegos.map(juego => (
             <Col md={4} key={juego.id} className="mb-4">
-              <Card bg="dark" text="white" className="h-100">
+              <Card bg="dark" text="white" className="h-100 card-glow-effect">
+                <div className="hologram-effect"></div>
                 <Card.Img variant="top" src={juego.imagen} alt={juego.nombre} className="card-img-custom" />
                 <Card.Body className="d-flex flex-column">
                   <Card.Title>{juego.nombre}</Card.Title>
