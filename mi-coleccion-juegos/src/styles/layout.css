@@ -31,6 +31,7 @@ body, html {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  margin-left: 250px;
 }
 
 /* Estilos de la barra lateral (Navbar) */
@@ -142,15 +143,15 @@ body, html {
 /* Estilo del título principal */
 .titulo-principal-neon {
   text-shadow: 0 0 10px var(--color-rosa-neon),
-               0 0 20px var(--color-rosa-neon),
-               0 0 30px var(--color-rosa-neon);
+                0 0 20px var(--color-rosa-neon),
+                0 0 30px var(--color-rosa-neon);
   transition: all 0.5s ease-in-out;
 }
 
 .titulo-principal-neon:hover {
   text-shadow: 0 0 20px var(--color-rosa-neon),
-               0 0 30px var(--color-rosa-neon),
-               0 0 40px var(--color-rosa-neon);
+                0 0 30px var(--color-rosa-neon),
+                0 0 40px var(--color-rosa-neon);
   transform: scale(1.05);
 }
 

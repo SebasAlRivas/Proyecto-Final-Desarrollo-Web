@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Spinner, Button } from 'react-bootstrap';
 import { db } from '../api/firebase';
-import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
+import { collection, onSnapshot, doc, deleteDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 
 function PaginaPrincipal() {
@@ -9,24 +9,21 @@ function PaginaPrincipal() {
   const [cargando, setCargando] = useState(true);
   const navigate = useNavigate();
 
-  const obtenerVideojuegos = async () => {
-    try {
-      const coleccion = collection(db, 'videojuegos');
-      const docs = await getDocs(coleccion);
-      const listaVideojuegos = docs.docs.map(doc => ({
+  useEffect(() => {
+    const coleccion = collection(db, 'videojuegos');
+    const unsubscribe = onSnapshot(coleccion, (querySnapshot) => {
+      const listaVideojuegos = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
       setVideojuegos(listaVideojuegos);
-    } catch (error) {
-      console.error("Error al obtener los documentos: ", error);
-    } finally {
       setCargando(false);
-    }
-  };
+    }, (error) => {
+      console.error("Error al obtener los documentos: ", error);
+      setCargando(false);
+    });
 
-  useEffect(() => {
-    obtenerVideojuegos();
+    return () => unsubscribe();
   }, []);
 
   const handleEliminar = async (id) => {
@@ -34,7 +31,6 @@ function PaginaPrincipal() {
     if (confirmar) {
       try {
         await deleteDoc(doc(db, "videojuegos", id));
-        obtenerVideojuegos();
         console.log("Documento eliminado correctamente");
       } catch (error) {
         console.error("Error al eliminar el documento: ", error);
@@ -53,7 +49,7 @@ function PaginaPrincipal() {
       ) : videojuegos.length > 0 ? (
         <Row>
           {videojuegos.map(juego => (
-            <Col md={4} key={juego.id} className="mb-4">
+            <Col xs={12} sm={6} md={4} key={juego.id} className="mb-4">
               <Card bg="dark" text="white" className="h-100 card-glow-effect">
                 <div className="hologram-effect"></div>
                 <Card.Img variant="top" src={juego.imagen} alt={juego.nombre} className="card-img-custom" />
