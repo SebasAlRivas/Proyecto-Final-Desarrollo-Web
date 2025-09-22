@@ -44,7 +44,7 @@ function PaginaPrincipal() {
 
   return (
     <Container className="my-5">
-      <h1 className="text-center mb-4" style={{ color: 'var(--color-rosa-neon)' }}>Mi Colección de Videojuegos</h1>
+      <h1 className="text-center mb-4 titulo-principal-neon" style={{ color: 'var(--color-rosa-neon)' }}>Mi Colección de Videojuegos</h1>
       {cargando ? (
         <div className="text-center">
           <Spinner animation="border" variant="light" />

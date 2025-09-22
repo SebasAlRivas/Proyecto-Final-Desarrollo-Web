@@ -1,8 +1,43 @@
 .footer {
-  background-color: var(--color-fondo-oscuro);
+  background-color: var(--color-azul-oscuro);
   color: var(--color-blanco-brillante);
-  text-align: center;
   padding: 1rem;
   width: 100%;
   margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.footerContenedor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.footerTexto {
+  margin-bottom: 1rem;
+}
+
+.footerParrafo {
+  margin-bottom: 0;
+}
+
+.footerRedesSociales {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footerIcono {
+  color: var(--color-blanco-brillante);
+  margin: 0 0.5rem;
+}
+
+.footerIcono:hover {
+  color: var(--color-rosa-neon);
 }

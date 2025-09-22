@@ -1,31 +1,39 @@
+import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGamepad, faPlus, faHome, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 import styles from './Navbar.module.css';
 
 function Navbar() {
-    return (
-        <nav className={styles.sidebar}>
-            <div className={styles.header}>
-                <h4>🎮 Colección de Juegos</h4>
-            </div>
-            <ul className={styles.menu}>
-                <li>
-                    <NavLink to="/" exact="true">
-                        Inicio
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink to="/crear">
-                        Añadir Videojuego
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink to="/sugerencias">
-                        Sugerencias
-                    </NavLink>
-                </li>
-            </ul>
-        </nav>
-    );
+  return (
+    <div className={styles.sidebar}>
+      <div className={styles.header}>
+        <div className={styles.joystickIcon}>
+          <FontAwesomeIcon icon={faGamepad} size="2x" />
+        </div>
+        <div className={styles.tituloFondo}>
+          <h4>Mi Colección de Juegos</h4>
+        </div>
+      </div>
+      <ul className={styles.menu}>
+        <li>
+          <NavLink to="/" className={({ isActive }) => (isActive ? styles.active : undefined)}>
+            <FontAwesomeIcon icon={faHome} /> Inicio
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/crear" className={({ isActive }) => (isActive ? styles.active : undefined)}>
+            <FontAwesomeIcon icon={faPlus} /> Añadir Juego
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/sugerencias" className={({ isActive }) => (isActive ? styles.active : undefined)}>
+            <FontAwesomeIcon icon={faThumbsUp} /> Sugerencias
+          </NavLink>
+        </li>
+      </ul>
+    </div>
+  );
 }
 
 export default Navbar;

@@ -14,7 +14,7 @@ function App() {
     <BrowserRouter>
       <div className="contenedor-principal-app">
         <Navbar />
-        <div className="contenedor-flex-content">
+        <div className="contenido-principal">
           <Routes>
             <Route path="/" element={<PaginaPrincipal />} />
             <Route path="/crear" element={<FormularioVideojuego />} />

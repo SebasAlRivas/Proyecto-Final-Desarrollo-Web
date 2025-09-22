@@ -1,37 +1,69 @@
 .sidebar {
-  width: 250px;
-  min-height: 100vh;
-  background-color: var(--color-fondo-oscuro);
+  background-color: var(--color-azul-oscuro);
   padding: 20px;
-  position: fixed; /* Mantiene la Navbar en su lugar */
+  min-width: 250px;
+  height: 100vh;
+  position: fixed;
   left: 0;
   top: 0;
-  color: white;
+  display: flex;
+  flex-direction: column;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
 }
 
 .header {
   text-align: center;
   margin-bottom: 30px;
+}
+
+.tituloFondo {
+  background-color: var(--color-rosa-neon);
+  color: var(--color-fondo-oscuro);
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.header h4 {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 2px;
+  margin: 0;
+}
+
+.joystickIcon {
   color: var(--color-rosa-neon);
+  margin-bottom: 10px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.joystickIcon:hover {
+  transform: rotate(15deg) scale(1.1);
 }
 
 .menu {
   list-style: none;
   padding: 0;
+  width: 100%;
 }
 
 .menu li {
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 .menu a {
   color: var(--color-blanco-brillante);
   text-decoration: none;
-  font-size: 1.1rem;
-  transition: color 0.3s;
+  padding: 10px 15px;
+  display: block;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 .menu a:hover {
-  color: var(--color-azul-electrico);
+  background-color: var(--color-gris-intermedio);
+}
+
+.menu a.active {
+  background-color: var(--color-rosa-neon);
+  color: var(--color-blanco-brillante);
+  font-weight: bold;
 }
