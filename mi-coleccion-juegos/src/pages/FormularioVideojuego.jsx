@@ -4,15 +4,9 @@ import { db } from '../api/firebase';
 import { collection, addDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { useForm } from 'react-hook-form';
 
 function FormularioVideojuego() {
-  const [nombre, setNombre] = useState('');
-  const [plataforma, setPlataforma] = useState('');
-  const [genero, setGenero] = useState('');
-  const [año, setAño] = useState('');
-  const [imagen, setImagen] = useState('');
-  const [valoracion, setValoracion] = useState('');
-  const [estrellas, setEstrellas] = useState(0);
   const [loadingSearch, setLoadingSearch] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const { id } = useParams();
@@ -21,6 +15,8 @@ function FormularioVideojuego() {
   const esEdicion = !!id;
   const timeoutRef = useRef(null);
 
+  const { register, handleSubmit, setValue, formState: { errors }, watch } = useForm();
+
   useEffect(() => {
     const obtenerVideojuego = async () => {
       if (esEdicion) {
@@ -28,29 +24,26 @@ function FormularioVideojuego() {
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           const data = docSnap.data();
-          setNombre(data.nombre || '');
-          setPlataforma(data.plataforma || '');
-          setGenero(data.genero || '');
-          setAño(data.año || '');
-          setImagen(data.imagen || '');
-          setValoracion(data.valoracion || '');
-          setEstrellas(data.estrellas || 0);
+          setValue('nombre', data.nombre);
+          setValue('plataforma', data.plataforma);
+          setValue('genero', data.genero);
+          setValue('año', data.año);
+          setValue('imagen', data.imagen);
+          setValue('valoracion', data.valoracion);
+          setValue('estrellas', data.estrellas);
         }
       }
     };
     obtenerVideojuego();
-  }, [id, esEdicion]);
+  }, [id, esEdicion, setValue]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const datos = { nombre, plataforma, genero, año, imagen, valoracion, estrellas: Number(estrellas) };
-
+  const onSubmit = async (data) => {
     try {
       if (esEdicion) {
         const docRef = doc(db, 'videojuegos', id);
-        await updateDoc(docRef, datos);
+        await updateDoc(docRef, data);
       } else {
-        await addDoc(collection(db, 'videojuegos'), datos);
+        await addDoc(collection(db, 'videojuegos'), data);
       }
       navigate('/');
     } catch (error) {
@@ -60,7 +53,7 @@ function FormularioVideojuego() {
 
   const handleNombreChange = (e) => {
     const value = e.target.value;
-    setNombre(value);
+    setValue('nombre', value);
 
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
@@ -86,22 +79,22 @@ function FormularioVideojuego() {
   };
 
   const fillForm = (game) => {
-    setNombre(game.name || '');
-    setPlataforma(game.platforms?.map(p => p.platform.name).join(', ') || '');
-    setGenero(game.genres?.map(g => g.name).join(', ') || '');
-    setAño(game.released?.split('-')[0] || '');
-    setImagen(game.background_image || '');
+    setValue('nombre', game.name || '');
+    setValue('plataforma', game.platforms?.map(p => p.platform.name).join(', ') || '');
+    setValue('genero', game.genres?.map(g => g.name).join(', ') || '');
+    setValue('año', game.released?.split('-')[0] || '');
+    setValue('imagen', game.background_image || '');
     setSearchResults([]);
   };
 
-  const renderEstrellas = () => {
+  const renderEstrellas = (estrellas) => {
     const estrellasArray = [];
     for (let i = 1; i <= 5; i++) {
       estrellasArray.push(
         <span
           key={i}
           className="star"
-          onClick={() => setEstrellas(i)}
+          onClick={() => setValue('estrellas', i)}
           style={{ cursor: 'pointer', color: i <= estrellas ? 'gold' : 'gray', fontSize: '24px' }}
         >
           ★
@@ -118,17 +111,17 @@ function FormularioVideojuego() {
       </h1>
       <Row className="justify-content-md-center">
         <Col md={8}>
-          <Form onSubmit={handleSubmit} className="p-4 rounded" style={{ backgroundColor: 'var(--color-fondo-oscuro)' }}>
+          <Form onSubmit={handleSubmit(onSubmit)} className="p-4 rounded" style={{ backgroundColor: 'var(--color-fondo-oscuro)' }}>
             
             <Form.Group className="mb-3" controlId="formNombre">
               <Form.Label>Nombre del Videojuego</Form.Label>
               <Form.Control 
                 type="text" 
-                value={nombre} 
+                {...register('nombre', { required: 'El nombre es obligatorio' })}
                 onChange={handleNombreChange} 
-                required 
                 placeholder="Ej: The Last of Us"
               />
+              {errors.nombre && <p className="text-danger mt-1">{errors.nombre.message}</p>}
               {loadingSearch && <Spinner animation="border" size="sm" className="mt-2" />}
             </Form.Group>
 
@@ -155,28 +148,38 @@ function FormularioVideojuego() {
             
             <Form.Group className="mb-3" controlId="formPlataforma">
               <Form.Label>Plataforma</Form.Label>
-              <Form.Control type="text" value={plataforma} onChange={(e) => setPlataforma(e.target.value)} required />
+              <Form.Control type="text" {...register('plataforma', { required: 'La plataforma es obligatoria' })} />
+              {errors.plataforma && <p className="text-danger mt-1">{errors.plataforma.message}</p>}
             </Form.Group>
+            
             <Form.Group className="mb-3" controlId="formGenero">
               <Form.Label>Género</Form.Label>
-              <Form.Control type="text" value={genero} onChange={(e) => setGenero(e.target.value)} required />
+              <Form.Control type="text" {...register('genero', { required: 'El género es obligatorio' })} />
+              {errors.genero && <p className="text-danger mt-1">{errors.genero.message}</p>}
             </Form.Group>
+            
             <Form.Group className="mb-3" controlId="formAño">
               <Form.Label>Año de Lanzamiento</Form.Label>
-              <Form.Control type="number" value={año} onChange={(e) => setAño(e.target.value)} required />
+              <Form.Control type="number" {...register('año', { required: 'El año es obligatorio' })} />
+              {errors.año && <p className="text-danger mt-1">{errors.año.message}</p>}
             </Form.Group>
+            
             <Form.Group className="mb-3" controlId="formImagen">
               <Form.Label>URL de la Imagen</Form.Label>
-              <Form.Control type="url" value={imagen} onChange={(e) => setImagen(e.target.value)} required />
+              <Form.Control type="url" {...register('imagen', { required: 'La URL de la imagen es obligatoria' })} />
+              {errors.imagen && <p className="text-danger mt-1">{errors.imagen.message}</p>}
             </Form.Group>
+            
             <Form.Group className="mb-3" controlId="formValoracion">
               <Form.Label>Mi Valoración</Form.Label>
-              <Form.Control type="text" value={valoracion} onChange={(e) => setValoracion(e.target.value)} />
+              <Form.Control type="text" {...register('valoracion')} />
             </Form.Group>
+            
             <Form.Group className="mb-3" controlId="formEstrellas">
               <Form.Label>Calificación (Estrellas)</Form.Label>
-              <div>{renderEstrellas()}</div>
+              <div>{renderEstrellas(watch('estrellas'))}</div>
             </Form.Group>
+            
             <Button variant="primary" type="submit" className="w-100">
               {esEdicion ? 'Guardar Cambios' : 'Añadir Videojuego'}
             </Button>
