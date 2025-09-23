@@ -13,6 +13,9 @@ function Navbar() {
         <div className={styles.tituloFondo}>
           <h4>Mi Colección</h4>
         </div>
+        <div className={styles.joystickIcon}>
+          <FaGamepad size={20} color="white" />
+        </div>
       </header>
       <ul className={styles.menu}>
         <li>
