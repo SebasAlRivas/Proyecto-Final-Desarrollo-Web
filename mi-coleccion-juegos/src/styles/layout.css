@@ -1,4 +1,4 @@
-/* Variables de color */
+/* Definición de variables CSS para la paleta de colores */
 :root {
   --color-fondo-principal: #121212;
   --color-fondo-oscuro: #1e1e1e;
@@ -7,17 +7,21 @@
   --color-blanco-brillante: #ffffff;
   --color-rosa-neon: #ff69b4;
   --color-azul-oscuro: #1a2a3a;
+  --color-rojo-neon: #ff007f;
+  --color-amarillo-neon: #efff00;
+  --color-verde-neon: #00ff7f;
+  --color-negro-oscuro: #1a1a1a;
 }
 
-/* Reset / base */
-body,
-html {
+body, html {
   background-color: var(--color-fondo-principal);
   color: var(--color-blanco-brillante);
   font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   min-height: 100vh;
   margin: 0;
   padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Contenedor principal de la aplicación */
@@ -32,14 +36,12 @@ html {
   display: flex;
   flex-direction: column;
   padding: 20px;
-  /* Por defecto, no tiene margen para móviles */
 }
 
 /* Reglas específicas para pantallas grandes */
 @media (min-width: 992px) {
   .contenido-principal {
     margin-left: 250px;
-    /* espacio para la sidebar fija en desktop */
     transition: margin 0.2s ease;
   }
 }
@@ -50,7 +52,6 @@ html {
   .contenido-principal {
     margin-left: 0;
     padding-top: 60px;
-    /* Incrementamos el padding para la barra de navegación en móviles */
   }
 }
 
@@ -62,7 +63,6 @@ html {
   position: relative;
   overflow: hidden;
   z-index: 0;
-  /* Las tarjetas empiezan por debajo del sidebar */
 }
 
 .card:hover {
@@ -71,7 +71,6 @@ html {
   background-color: var(--color-azul-oscuro);
   border-color: var(--color-rosa-neon);
   z-index: 1;
-  /* sube un nivel, pero el sidebar con z-index:2000 sigue encima */
 }
 
 /* Estilo para las imágenes de las tarjetas */
@@ -143,4 +142,47 @@ html {
   .card-img-custom {
     height: 140px;
   }
+}
+
+/* Estilos para Botones Neón */
+.btn-neon-red {
+    background-color: transparent !important;
+    border: 2px solid var(--color-rojo-neon) !important;
+    color: var(--color-rojo-neon) !important;
+    box-shadow: 0 0 5px var(--color-rojo-neon), 0 0 15px var(--color-rojo-neon), 0 0 30px var(--color-rojo-neon);
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-neon-red:hover {
+    background-color: var(--color-rojo-neon) !important;
+    color: var(--color-blanco-brillante) !important;
+    box-shadow: 0 0 10px var(--color-rojo-neon), 0 0 25px var(--color-rojo-neon), 0 0 50px var(--color-rojo-neon);
+}
+
+.btn-neon-yellow {
+    background-color: transparent !important;
+    border: 2px solid var(--color-amarillo-neon) !important;
+    color: var(--color-amarillo-neon) !important;
+    box-shadow: 0 0 5px var(--color-amarillo-neon), 0 0 15px var(--color-amarillo-neon), 0 0 30px var(--color-amarillo-neon);
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-neon-yellow:hover {
+    background-color: var(--color-amarillo-neon) !important;
+    color: var(--color-negro-oscuro) !important;
+    box-shadow: 0 0 10px var(--color-amarillo-neon), 0 0 25px var(--color-amarillo-neon), 0 0 50px var(--color-amarillo-neon);
+}
+
+.btn-neon-green {
+    background-color: transparent !important;
+    border: 2px solid var(--color-verde-neon) !important;
+    color: var(--color-verde-neon) !important;
+    box-shadow: 0 0 5px var(--color-verde-neon), 0 0 15px var(--color-verde-neon), 0 0 30px var(--color-verde-neon);
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-neon-green:hover {
+    background-color: var(--color-verde-neon) !important;
+    color: var(--color-negro-oscuro) !important;
+    box-shadow: 0 0 10px var(--color-verde-neon), 0 0 25px var(--color-verde-neon), 0 0 50px var(--color-verde-neon);
 }

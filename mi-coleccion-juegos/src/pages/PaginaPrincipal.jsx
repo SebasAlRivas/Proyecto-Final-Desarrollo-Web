@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Spinner, Button } from 'react-bootstrap';
 import { db } from '../api/firebase';
 import { collection, onSnapshot, doc, deleteDoc } from 'firebase/firestore';
-import { useNavigate, Link } from 'react-router-dom'; // Importamos Link
+import { useNavigate, Link } from 'react-router-dom';
 
 function PaginaPrincipal() {
   const [videojuegos, setVideojuegos] = useState([]);
@@ -50,7 +50,6 @@ function PaginaPrincipal() {
         <Row className="gx-4 gy-4">
           {videojuegos.map(juego => (
             <Col xs={12} sm={6} md={4} key={juego.id}>
-              {/* Usamos Link para navegar a la página de detalles */}
               <Link to={`/videojuego/${juego.id}`} style={{ textDecoration: 'none' }}>
                 <Card bg="dark" text="white" className="h-100 card-glow-effect">
                   <div className="hologram-effect"></div>
@@ -58,22 +57,20 @@ function PaginaPrincipal() {
                   <Card.Body className="d-flex flex-column">
                     <Card.Title>{juego.nombre}</Card.Title>
                     <Card.Text>
-                      {/* Ocultamos los detalles que se verán en la página de detalles */}
                       <p><strong>Géneros:</strong> {juego.genero}</p>
                     </Card.Text>
-                    <div className="mt-auto">
+                    <div className="mt-auto d-flex justify-content-around">
                       <Button 
-                        variant="warning" 
                         size="sm" 
-                        className="me-2"
-                        onClick={(e) => { e.preventDefault(); navigate(`/editar/${juego.id}`); }} // Prevent default para no navegar
+                        className="btn-neon-yellow"
+                        onClick={(e) => { e.preventDefault(); navigate(`/editar/${juego.id}`); }}
                       >
                         Editar
                       </Button>
                       <Button 
-                        variant="danger" 
                         size="sm"
-                        onClick={(e) => { e.preventDefault(); handleEliminar(juego.id); }} // Prevent default para no navegar
+                        className="btn-neon-red"
+                        onClick={(e) => { e.preventDefault(); handleEliminar(juego.id); }}
                       >
                         Eliminar
                       </Button>

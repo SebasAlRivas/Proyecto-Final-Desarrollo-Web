@@ -57,7 +57,7 @@ function DetalleVideojuego() {
     return (
       <Container className="my-5 text-center">
         <p style={{ color: 'var(--color-blanco-brillante)' }}>No se pudo cargar la información del videojuego.</p>
-        <Button onClick={() => navigate('/')} variant="primary">Volver a la página principal</Button>
+        <Button onClick={() => navigate('/')} className="btn-neon-green">Volver a la página principal</Button>
       </Container>
     );
   }
@@ -71,7 +71,10 @@ function DetalleVideojuego() {
         </div>
       ) : (
         <div className="p-4 rounded" style={{ backgroundColor: 'var(--color-fondo-oscuro)' }}>
-          <Button onClick={() => navigate(-1)} variant="primary" className="mb-3">
+          <Button 
+            onClick={() => navigate(-1)} 
+            className="mb-3 btn-neon-green"
+          >
             ← Volver
           </Button>
           <h1 className="text-center mb-4 titulo-principal-neon" style={{ color: 'var(--color-rosa-neon)' }}>{juego.nombre}</h1>
