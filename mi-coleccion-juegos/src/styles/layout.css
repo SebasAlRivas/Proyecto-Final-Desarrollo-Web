@@ -35,23 +35,23 @@ body, html {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  padding: 20px;
 }
 
 /* Reglas específicas para pantallas grandes */
 @media (min-width: 992px) {
   .contenido-principal {
     margin-left: 250px;
+    padding: 20px;
     transition: margin 0.2s ease;
   }
 }
 
-/* Cuando la pantalla es chica, dejamos la sidebar en top (position: relative),
-   por eso removemos el margin-left para que el contenido ocupe todo el ancho */
+/* Reglas para móviles */
 @media (max-width: 991px) {
   .contenido-principal {
     margin-left: 0;
-    padding-top: 60px;
+    padding-top: 60px; /* Para dejar espacio al Navbar fijo superior */
+    padding: 20px;
   }
 }
 
