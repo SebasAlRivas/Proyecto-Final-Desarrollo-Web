@@ -1,4 +1,5 @@
-/* Definición de variables CSS para la paleta de colores */
+
+/* Variables de color */
 :root {
   --color-fondo-principal: #121212;
   --color-fondo-oscuro: #1e1e1e;
@@ -9,6 +10,7 @@
   --color-azul-oscuro: #1a2a3a;
 }
 
+/* Reset / base */
 body, html {
   background-color: var(--color-fondo-principal);
   color: var(--color-blanco-brillante);
@@ -16,8 +18,6 @@ body, html {
   min-height: 100vh;
   margin: 0;
   padding: 0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Contenedor principal de la aplicación */
@@ -26,81 +26,34 @@ body, html {
   min-height: 100vh;
 }
 
-/* Contenedor del contenido principal y footer */
+/* Contenedor del contenido principal y footer
+   Importante: margin-left coincide con el ancho de la sidebar (250px) */
 .contenido-principal {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  margin-left: 250px;
-}
-
-/* Estilos de la barra lateral (Navbar) */
-.sidebar {
-  background-color: var(--color-azul-oscuro);
+  margin-left: 250px; /* espacio para la sidebar fija en desktop */
+  transition: margin 0.2s ease;
   padding: 20px;
-  min-width: 250px;
-  height: 100vh;
-  position: sticky;
-  top: 0;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
 }
 
-.sidebar .header h4 {
-  color: var(--color-rosa-neon);
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 30px;
+/* Cuando la pantalla es chica, dejamos la sidebar en top (position: relative),
+   por eso removemos el margin-left para que el contenido ocupe todo el ancho */
+@media (max-width: 991px) {
+  .contenido-principal {
+    margin-left: 0;
+    padding-top: 12px;
+  }
 }
 
-.sidebar .menu {
-  list-style: none;
-  padding: 0;
-  width: 100%;
-}
-
-.sidebar .menu li {
-  margin-bottom: 10px;
-}
-
-.sidebar .menu a {
-  color: var(--color-blanco-brillante);
-  text-decoration: none;
-  padding: 10px 15px;
-  display: block;
-  border-radius: 5px;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.sidebar .menu a:hover {
-  background-color: var(--color-gris-intermedio);
-}
-
-/* Estilo para el enlace activo */
-.sidebar .menu a.active {
-  background-color: var(--color-rosa-neon);
-  color: var(--color-blanco-brillante);
-  font-weight: bold;
-}
-
-/* Estilos para el pie de página */
-.footer {
-  background-color: var(--color-azul-oscuro);
-  color: var(--color-blanco-brillante);
-  text-align: center;
-  padding: 1rem;
-  width: 100%;
-  margin-top: auto;
-}
-
-/* Estilos para las tarjetas de videojuegos */
+/* Estilos para las tarjetas de videojuegos (globales) */
 .card {
   transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out, background-color 0.4s ease-in-out;
   border: 1px solid var(--color-gris-intermedio);
   background-color: var(--color-fondo-oscuro);
   position: relative;
   overflow: hidden;
+  z-index: 0; /* <--- Las tarjetas empiezan por debajo del sidebar */
 }
 
 .card:hover {
@@ -108,6 +61,7 @@ body, html {
   box-shadow: 0 25px 50px rgba(255, 105, 180, 0.4);
   background-color: var(--color-azul-oscuro);
   border-color: var(--color-rosa-neon);
+  z-index: 1; /* sube un nivel, pero el sidebar con z-index:2000 sigue encima */
 }
 
 /* Estilo para las imágenes de las tarjetas */
@@ -118,72 +72,44 @@ body, html {
   border-top-right-radius: calc(0.25rem - 1px);
 }
 
-/* Estilo para el efecto de reflejo holográfico */
+/* Efecto holográfico (si lo usás) */
 .hologram-effect {
   position: absolute;
   top: 0;
   left: -200%;
   width: 200%;
   height: 100%;
-  background: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.2) 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  transform: skewX(-20deg);
+  background: linear-gradient(120deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 100%);
+  transform: skewX(-25deg);
+  transition: left 0.8s ease-in-out;
   pointer-events: none;
-  transition: transform 0.8s ease-in-out;
 }
 
 .card:hover .hologram-effect {
   left: 100%;
 }
 
-/* Estilo del título principal */
+/* Título principal (neón) */
 .titulo-principal-neon {
   text-shadow: 0 0 10px var(--color-rosa-neon),
-                0 0 20px var(--color-rosa-neon),
-                0 0 30px var(--color-rosa-neon);
+               0 0 20px var(--color-rosa-neon),
+               0 0 30px var(--color-rosa-neon);
   transition: all 0.5s ease-in-out;
 }
 
 .titulo-principal-neon:hover {
   text-shadow: 0 0 20px var(--color-rosa-neon),
-                0 0 30px var(--color-rosa-neon),
-                0 0 40px var(--color-rosa-neon);
-  transform: scale(1.05);
+               0 0 30px var(--color-rosa-neon),
+               0 0 40px var(--color-rosa-neon);
 }
 
-/* Estilos para el formulario */
-.form-label {
-  color: var(--color-blanco-brillante);
+/* Contenedores y utilidades */
+.container-fluid, .container {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.form-control {
-  background-color: var(--color-gris-claro-formulario);
-  border: none;
-  color: var(--color-blanco-brillante);
-}
-
-.form-control:focus {
-  background-color: var(--color-gris-claro-formulario);
-  color: var(--color-blanco-brillante);
-  box-shadow: 0 0 0 0.25rem rgba(255, 105, 180, 0.5);
-}
-
-.btn-primary {
-  background-color: var(--color-rosa-neon);
-  border-color: var(--color-rosa-neon);
-  color: var(--color-blanco-brillante);
-}
-
-.btn-primary:hover {
-  background-color: var(--color-rosa-neon);
-  border-color: var(--color-rosa-neon);
-}
-
-/* Estilos para el slider de sugerencias */
+/* Ajustes específicos para sliders / sugerencias (si los usás) */
 .slider-container-sugerencias {
   overflow: hidden;
   max-width: 900px;
@@ -199,4 +125,11 @@ body, html {
   min-width: 33.3333%;
   padding: 0 10px;
   box-sizing: border-box;
+}
+
+/* Pequeño ajuste final para móviles: imágenes menores */
+@media (max-width: 600px) {
+  .card-img-custom {
+    height: 140px;
+  }
 }
