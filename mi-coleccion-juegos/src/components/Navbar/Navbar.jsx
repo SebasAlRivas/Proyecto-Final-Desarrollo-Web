@@ -1,38 +1,46 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGamepad, faPlus, faHome, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 import styles from './Navbar.module.css';
+import { FaGamepad } from "react-icons/fa";
 
 function Navbar() {
   return (
-    <div className={styles.sidebar}>
-      <div className={styles.header}>
+    <nav className={styles.sidebar}>
+      <header className={styles.header}>
         <div className={styles.joystickIcon}>
-          <FontAwesomeIcon icon={faGamepad} size="2x" />
+          <FaGamepad size={20} color="white" />
         </div>
         <div className={styles.tituloFondo}>
-          <h4>Mi Colección de Juegos</h4>
+          <h4>Mi Colección</h4>
         </div>
-      </div>
+      </header>
       <ul className={styles.menu}>
         <li>
-          <NavLink to="/" className={({ isActive }) => (isActive ? styles.active : undefined)}>
-            <FontAwesomeIcon icon={faHome} /> Inicio
+          <NavLink
+            to="/"
+            className={({ isActive }) => (isActive ? styles.active : undefined)}
+          >
+            Mi Colección
           </NavLink>
         </li>
         <li>
-          <NavLink to="/crear" className={({ isActive }) => (isActive ? styles.active : undefined)}>
-            <FontAwesomeIcon icon={faPlus} /> Añadir Juego
+          <NavLink
+            to="/crear"
+            className={({ isActive }) => (isActive ? styles.active : undefined)}
+          >
+            Agregar Juego
           </NavLink>
         </li>
         <li>
-          <NavLink to="/sugerencias" className={({ isActive }) => (isActive ? styles.active : undefined)}>
-            <FontAwesomeIcon icon={faThumbsUp} /> Sugerencias
+          <NavLink
+            to="/sugerencias"
+            className={({ isActive }) => (isActive ? styles.active : undefined)}
+          >
+            Sugerencias
           </NavLink>
         </li>
       </ul>
-    </div>
+    </nav>
   );
 }
 
