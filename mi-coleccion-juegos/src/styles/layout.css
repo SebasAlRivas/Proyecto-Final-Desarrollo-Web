@@ -50,7 +50,7 @@ body, html {
 @media (max-width: 991px) {
   .contenido-principal {
     margin-left: 0;
-    padding-top: 60px; /* Para dejar espacio al Navbar fijo superior */
+    padding-top: 60px; 
     padding: 20px;
   }
 }
@@ -81,7 +81,7 @@ body, html {
   border-top-right-radius: calc(0.25rem - 1px);
 }
 
-/* Efecto holográfico (si lo usás) */
+/* Efecto holográfico*/
 .hologram-effect {
   position: absolute;
   top: 0;

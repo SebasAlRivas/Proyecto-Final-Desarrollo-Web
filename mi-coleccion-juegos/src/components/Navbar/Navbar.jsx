@@ -21,7 +21,7 @@ function Navbar() {
 
   return (
     <>
-      {/* Navbar para dispositivos móviles (desplegable) */}
+      {/* Navbar para dispositivos móviles */}
       <BNavbar expand="lg" variant="dark" className={`${styles.navbarMobile} p-3 d-lg-none`} fixed="top">
         <BNavbar.Brand className={styles.header}>
           {brandContent}
@@ -54,7 +54,7 @@ function Navbar() {
         </BNavbar.Offcanvas>
       </BNavbar>
 
-      {/* Navbar para pantallas grandes (barra lateral) */}
+      {/* Navbar para pantallas grandes  */}
       <nav className={`${styles.sidebar} d-none d-lg-flex flex-column text-white`}>
         <header className={styles.header}>
           {brandContent}

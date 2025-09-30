@@ -1,3 +1,4 @@
+/* Estilos para el movimiento de las targetas de recomendaciones */
 .sugerenciaCard {
   border-left: 5px solid var(--color-rosa-neon);
   transition: transform 0.1s ease-in-out;
