@@ -2,13 +2,13 @@
 
 ![Joysticks]
 
-Una **aplicación web de página única (SPA)** desarrollada con React para los verdaderos amantes de los videojuegos. El proyecto funciona como una base de datos personal donde puedes **gestionar, calificar y sugerir** tus títulos favoritos. Implementa una solución **CRUD** completa para mantener tu colección actualizada en tiempo real.
+Una **aplicación web** desarrollada con React para los verdaderos amantes de los videojuegos. El proyecto funciona como una base de datos personal donde puedes **gestionar, calificar y sugerir** tus títulos favoritos. Implementa una solución **CRUD** completa para mantener tu colección actualizada en tiempo real.
 
 ---
 
 ## ✨ Características Principales
 
-| Icono | Característica | Descripción |
+|  | Característica | Descripción |
 | :---: | :--- | :--- |
 | **🚀** | **CRUD Completo** | Crea, lee, actualiza y elimina juegos de tu colección de forma intuitiva. |
 | **⭐** | **Calificación y Sugerencias** | Permite calificar tus juegos favoritos y enviar sugerencias a la base de datos. |
