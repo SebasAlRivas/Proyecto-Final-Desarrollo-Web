@@ -1,6 +1,6 @@
 # 🎮 Mi Colección de Videojuegos
 
-![Joysticks](https://i.imgur.com/k6lP09B.png)
+![Joysticks]
 
 Una **aplicación web de página única (SPA)** desarrollada con React para los verdaderos amantes de los videojuegos. El proyecto funciona como una base de datos personal donde puedes **gestionar, calificar y sugerir** tus títulos favoritos. Implementa una solución **CRUD** completa para mantener tu colección actualizada en tiempo real.
 
